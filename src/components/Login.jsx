@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUser } from "../store/authSlice";
-import authService from "../appwrite/services/authService";
+import { login as storeLogin } from "../store/authSlice";
+import authservice from "../appwrite/services/authService";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import Button from "./index";
-import Input from "./index";
+import {Button} from "./index";
+import {InputBox} from "./index";
 
 export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { status } = useSelector((state) => state.user);
+  const { status } = useSelector((state) => state.user.status);
   const [error, setError] = useState(null);
 
   // Using React Hook Form
@@ -21,16 +21,19 @@ export default function Login() {
   } = useForm();
 
   const handleLogin = async (data) => {
-    setError(null); // Reset previous errors
+    setError("")
     try {
-      await authService.login({
-        email: data.email,
-        password: data.password,
-      }); // Attempt login
-      dispatch(fetchUser()).unwrap(); // Fetch logged-in user details
-      navigate("/"); // Redirect to Todos page
-    } catch (err) {
-      setError(err.message || "Login failed. Please try again.");
+      const session = await authservice.login(data)
+      if (session) {
+        const userData = await authservice.getcurrentuser()
+        console.log(userData);
+        
+        if(userData) dispatch(storeLogin(userData));
+        navigate("/")
+      }
+        
+    } catch (error) {
+      setError(error)
     }
   };
 
@@ -44,12 +47,12 @@ export default function Login() {
         {/* Show error message if exists */}
         {error && (
           <div className="p-3 mt-2 text-sm text-red-700 bg-red-100 border border-red-400 rounded-md">
-            {error}
+            {error.message}
           </div>
         )}
 
         <form className="mt-4 space-y-4" onSubmit={handleSubmit(handleLogin)}>
-          <Input
+          <InputBox
             label="Email"
             type="email"
             {...register("email", {
@@ -64,7 +67,7 @@ export default function Login() {
             <p className="text-red-500 text-sm">{errors.email.message}</p>
           )}
 
-          <Input
+          <InputBox
             label="Password"
             type="password"
             {...register("password", {
@@ -82,9 +85,9 @@ export default function Login() {
           <Button
             type="submit"
             bgColor="bg-blue-600 hover:bg-blue-700 w-full"
-            disabled={isSubmitting || status === "loading"}
+            disabled={isSubmitting || status === false}
           >
-            {isSubmitting || status === "loading" ? "Logging in..." : "Login"}
+            {isSubmitting || status === false ? "Logging in..." : "Login"}
           </Button>
         </form>
 

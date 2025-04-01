@@ -1,4 +1,4 @@
-import { Client, Databases, ID } from "appwrite";
+import { Client, Databases, ID, Query } from "appwrite";
 import configure from "../../configure/configure";
 
 export class TodoService {
@@ -39,7 +39,7 @@ export class TodoService {
       return await this.databases.listDocuments(
         configure.databaseId,
         configure.collectionId,
-        [`equal("userId", "${userId}")`, `orderDesc("createdAt")`],
+        [Query.equal("userId", userId)],
       );
     } catch (error) {
       console.error("Error in getTodos:", error);

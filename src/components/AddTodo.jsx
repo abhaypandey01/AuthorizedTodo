@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 function AddTodo() {
 
   const dispatch = useDispatch();
-  const user = useSelector((state) => (state.auth.userData));
+  const user = useSelector((state) => (state.user.userData));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const {
@@ -48,6 +48,7 @@ function AddTodo() {
         <InputBox
           label="Todo Text: "
           placeholder="Enter your task"
+          className="text-gray-800"
           {...register("text", {
             required: "Todo text is required.",
             maxLength: {

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { logout } from "../store/authSlice";
 import authService from "../appwrite/services/authService";
-import Button from "./index";
+import {Button} from "./index";
 import { useNavigate } from "react-router-dom";
 
 export default function LogoutButton() {

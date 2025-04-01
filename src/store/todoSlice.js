@@ -47,6 +47,7 @@ export const deleteTodo = createAsyncThunk(
   async (todoId, { rejectWithValue }) => {
     try {
       await todoService.deleteTodo(todoId);
+      return todoId;
     } catch (error) {
       return rejectWithValue(error.message);
     }

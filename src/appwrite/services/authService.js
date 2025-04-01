@@ -21,17 +21,10 @@ export class AuthService {
         password,
         name,
       );
-
-      // Attempt to log in the user
-      try {
-        return await this.login({ email, password });
-      } catch (loginError) {
-        // If login fails, delete the newly created account
-        await this.account.delete(useraccount.$id);
-        throw new Error(
-          "Account creation succeeded, but login failed. The account has been rolled back.",
-          loginError,
-        );
+      if (useraccount) {
+        return this.login({email, password})
+      } else {
+        return useraccount;
       }
     } catch (error) {
       throw error; // Re-throw the error for the caller to handle
