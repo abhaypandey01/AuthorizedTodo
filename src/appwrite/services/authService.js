@@ -2,6 +2,8 @@
 import { Client, Account, ID } from "appwrite";
 import configure from "../../configure/configure";
 
+
+
 export class AuthService {
   client = new Client();
   account;
@@ -10,7 +12,20 @@ export class AuthService {
       .setEndpoint(configure.url) // Your API Endpoint
       .setProject(configure.projectId);
     this.account = new Account(this.client);
+    this.handleTabClose(); // Attach event listener
   }
+
+  // Listen for tab close and logout user
+handleTabClose() {
+  window.addEventListener("beforeunload", async () => {
+    try {
+      await this.logout(); // Call logout when tab is closed
+    } catch (error) {
+      console.error("Error logging out on tab close:", error);
+    }
+  });
+}
+
 
   async createAccount({ email, password, name }) {
     try {
