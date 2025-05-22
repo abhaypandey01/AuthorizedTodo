@@ -6,8 +6,8 @@ function HomePage() {
         <Container className="text-white text-2xl font-semibold">
         <div>
             <h2>
-            This is a simple website to for adding, updating and deleting personalized
-            todos.</h2>
+            This is a simple website for adding, updating and deleting personalized
+            todos. Please Log in or Sign Up to add your todos.</h2>
         </div>
         </Container>
     );
